@@ -2,6 +2,22 @@ import React, { Component } from "react";
 import axios from "axios";
 import "./App.css";
 
+//Unxpected (network down, server down, db down, bug)
+//Log them
+//DIsplay generic and friendly error message
+//interceptor can be succes or error. In this case we don't need c
+axios.interceptors.response.use(null, error => {
+	const expectedError =
+		error.response &&
+		error.response.status >= 400 &&
+		error.response.status < 500;
+	if (!expectedError) {
+		console.log("Logging the error", error);
+		alert("An unexpected error occured.");
+	}
+	return Promise.reject(error);
+});
+
 const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
@@ -43,11 +59,14 @@ class App extends Component {
 		//remove from table all posts by id that we delete.
 		const posts = this.state.posts.filter(p => p.id !== post.id);
 		this.setState({ posts });
+		//Expected (404: not found, 400: bad request - CLIEBT ERRORS)
+		// - Display a specific error message
 		try {
-			axios.delete(apiEndpoint + "/" + post.id, post);
-			throw new Error("");
-		} catch (error) {
-			alert("Something failed when deleting the post");
+			await axios.delete(apiEndpoint + "/" + post.id);
+		} catch (ex) {
+			if (ex.response && ex.response.status === 404)
+				alert("Expected, this post has already been deleted");
+
 			this.setState({ posts: originalPosts });
 		}
 	};
