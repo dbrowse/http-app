@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import http from "./services/httpSevice";
+import config from "./config.json";
 import "./App.css";
-
-const apiEndpoint = "https://jsonplaceholder.typicode.com/posts";
 
 class App extends Component {
 	state = {
@@ -11,7 +10,7 @@ class App extends Component {
 
 	async componentDidMount() {
 		//object distructuring {what param we need from the object : const name }
-		const { data: posts } = await http.get(apiEndpoint);
+		const { data: posts } = await http.get(config.apiEndpoint);
 		console.log(posts);
 		this.setState({ posts });
 	}
@@ -19,14 +18,14 @@ class App extends Component {
 	handleAdd = async () => {
 		const obj = { title: "a", body: "b" };
 		//we need to send this object to the server
-		const { data: post } = await http.post(apiEndpoint, obj);
+		const { data: post } = await http.post(config.apiEndpoint, obj);
 		const posts = [post, ...this.state.posts];
 		this.setState({ posts });
 	};
 
 	handleUpdate = async post => {
 		post.title = "RAMBO" + 1;
-		http.put(apiEndpoint + "/" + post.id, post);
+		http.put(config.apiEndpoint + "/" + post.id, post);
 
 		//create new array and get every item from the previous
 		const posts = [...this.state.posts];
@@ -46,7 +45,7 @@ class App extends Component {
 		//Expected (404: not found, 400: bad request - CLIEBT ERRORS)
 		// - Display a specific error message
 		try {
-			await http.delete(apiEndpoint + "/" + post.id);
+			await http.delete(config.apiEndpoint + "/" + post.id);
 		} catch (ex) {
 			if (ex.response && ex.response.status === 404)
 				alert("This post has already been deleted");
