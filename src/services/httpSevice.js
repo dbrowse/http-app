@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 
 //Unxpected (network down, server down, db down, bug)
 //Log them
@@ -11,7 +12,8 @@ axios.interceptors.response.use(null, error => {
 		error.response.status < 500;
 	if (!expectedError) {
 		console.log("Logging the error", error);
-		alert("An unexpected error occured.");
+		//toast is function in JS are object
+		toast.error("An unexpected error occured.");
 	}
 	return Promise.reject(error);
 });

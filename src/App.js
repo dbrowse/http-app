@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { ToastContainer } from "react-toastify";
 import http from "./services/httpSevice";
 import config from "./config.json";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.css";
 
 class App extends Component {
@@ -45,7 +47,7 @@ class App extends Component {
 		//Expected (404: not found, 400: bad request - CLIEBT ERRORS)
 		// - Display a specific error message
 		try {
-			await http.delete(config.apiEndpoint + "/" + post.id);
+			await http.delete("a" + config.apiEndpoint + "/" + post.id);
 		} catch (ex) {
 			if (ex.response && ex.response.status === 404)
 				alert("This post has already been deleted");
@@ -56,6 +58,7 @@ class App extends Component {
 	render() {
 		return (
 			<React.Fragment>
+				<ToastContainer></ToastContainer>
 				<button className='btn btn-primary' onClick={this.handleAdd}>
 					Add
 				</button>
