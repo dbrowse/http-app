@@ -1,4 +1,5 @@
 import axios from "axios";
+import * as Sentry from "@sentry/browser";
 import { toast } from "react-toastify";
 
 //Unxpected (network down, server down, db down, bug)
@@ -11,7 +12,7 @@ axios.interceptors.response.use(null, error => {
 		error.response.status >= 400 &&
 		error.response.status < 500;
 	if (!expectedError) {
-		console.log("Logging the error", error);
+		Sentry.captureException(error);
 		//toast is function in JS are object
 		toast.error("An unexpected error occured.");
 	}

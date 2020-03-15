@@ -47,7 +47,7 @@ class App extends Component {
 		//Expected (404: not found, 400: bad request - CLIEBT ERRORS)
 		// - Display a specific error message
 		try {
-			await http.delete("a" + config.apiEndpoint + "/" + post.id);
+			await http.delete(config.apiEndpoint + "/" + post.id);
 		} catch (ex) {
 			if (ex.response && ex.response.status === 404)
 				alert("This post has already been deleted");
